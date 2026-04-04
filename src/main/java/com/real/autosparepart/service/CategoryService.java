@@ -44,7 +44,7 @@ public class CategoryService implements ICategory {
         category.setName(name);
         category.setSlug(dto.getSlug());
 
-        //5. Save - FIXED: use instance variable, not class name
+        //5. Save
         Category saved = categoryRepository.save(category);
 
         //6. Return DTO

@@ -30,4 +30,8 @@ public class Vehicle {
     // Relationship to get brand through products
     @ManyToMany(mappedBy = "vehicles")
     private List<Product> products;
+
+    public Object getId() {
+        return vehicleId;
+    }
 }
