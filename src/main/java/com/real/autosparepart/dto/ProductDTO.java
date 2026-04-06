@@ -4,8 +4,9 @@ import com.real.autosparepart.model.Brand;
 import com.real.autosparepart.model.Category;
 import com.real.autosparepart.model.Product;
 import com.real.autosparepart.model.Vehicle;
-import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,39 +29,26 @@ public class ProductDTO {
 
     private String slug;
 
-    @NotBlank(message = "price is required")
-    @DecimalMax(value = "0.1", message = "Price must be > 0")
+    @NotNull(message = "price is required")
+    @DecimalMin(value = "0.01", message = "Price must be > 0")
     private BigDecimal price;
 
     private String description;
 
     private Product.Status status;
 
-    private Vehicle vehicleId;
+    // FIXED: Changed from Vehicle object to Integer ID
+    private Integer vehicleId;
 
-    private Category category_id;
+    // For multiple vehicles support
+    private List<Integer> vehicleIds;
 
-    private Brand brandId;
+    // FIXED: Changed from Category object to Integer ID
+    private Integer categoryId;
 
-    public void setCreatedAt(LocalDateTime now) {
-    }
+    // FIXED: Changed from Brand object to Integer ID
+    private Integer brandId;
 
-    public void setUpdatedAt(LocalDateTime now) {
-    }
-
-    public void setCategoryId(Object id) {
-        return;
-    }
-
-    public Integer getCategoryId() {
-        return null;
-    }
-
-    public void setBrandId(Integer brandId) {
-        return;
-    }
-
-    public void setVehicleId(Integer vehicleId) {
-        return;
-    }
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

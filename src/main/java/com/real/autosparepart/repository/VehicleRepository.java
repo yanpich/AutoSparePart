@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface VehicleRepository extends JpaRepository<Vehicle,Integer> {
     boolean existsByModel(String model);
@@ -19,4 +20,5 @@ public interface VehicleRepository extends JpaRepository<Vehicle,Integer> {
                                 @Param("model") String model,
                                 @Param("yearFrom") Integer yearFrom,
                                 @Param("yearTo") Integer yearTo);
+
 }

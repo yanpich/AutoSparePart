@@ -81,7 +81,9 @@ public class Product {
 
 
     public enum Status {
-        ACTIVE, INACTIVE, DRAFT
+            active,
+            inactive,
+            draft;
     }
 
     @PrePersist
