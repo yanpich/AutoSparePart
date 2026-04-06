@@ -6,10 +6,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -26,5 +25,25 @@ public class CategoryController {
         CategoryDTO saved = categoryService.createCategory(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
 
+    }
+    @GetMapping("/categories/{id}")
+    public ResponseEntity<CategoryDTO> findById(@PathVariable Integer id) {
+        CategoryDTO category = categoryService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(category);
+    }
+    @GetMapping("/categories")
+    public ResponseEntity<List<CategoryDTO>> findAll() {
+        List<CategoryDTO> list = categoryService.findAll();
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+    }
+    @PutMapping("/categories/{id}")
+    public ResponseEntity<CategoryDTO> update(@PathVariable Integer id, @Valid @RequestBody CategoryDTO dto) {
+        CategoryDTO updated = categoryService.updateCategory(id, dto);  // Pass both parameters
+        return ResponseEntity.status(HttpStatus.OK).body(updated);
+    }
+    @DeleteMapping("/categories/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        categoryService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -17,7 +17,7 @@ The system provides secure, scalable, and maintainable APIs with JWT-based authe
 ---
 
 ## ✨ Features
-- User Authentication (JWT Login)
-- CRUD Operations (Vehicle, Category, etc.)
+- User Authentication (Register, JWT Login)
+- CRUD Operations (Vehicle, Category, Product, etc.)
 - Flexible Search & Filtering (e.g. by model, year range)
 - Secure API with validation and error handling
