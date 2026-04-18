@@ -39,14 +39,12 @@ public class ProductService implements IProduct {
         this.brandRepository = brandRepository;
         this.vehicleRepository = vehicleRepository;
     }
-
     @Override
     public ProductDTO create(ProductDTO dto) {
         // 1. Validate
         if (dto == null) {
             throw new RuntimeException("Product cannot be null");
         }
-
         if (dto.getProductName() == null || dto.getProductName().trim().isEmpty()) {
             throw new RuntimeException("Product name is required");
         }
@@ -246,7 +244,7 @@ public class ProductService implements IProduct {
             existingProduct.setCategory(category);
         }
 
-        // Update brand
+        // Update brand-admin-panel
         if (dto.getBrandId() != null) {
             Brand brand = brandRepository.findById(dto.getBrandId())
                     .orElseThrow(() -> new RuntimeException(
@@ -277,7 +275,6 @@ public class ProductService implements IProduct {
         Product updated = productRepository.save(existingProduct);
         return mapToDTO(updated);
     }
-
     @Override
     public void delete(Integer id) {
         if (!productRepository.existsById(id)) {

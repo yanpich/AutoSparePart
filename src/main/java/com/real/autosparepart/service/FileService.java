@@ -1,56 +1,86 @@
 package com.real.autosparepart.service;
 
+import com.real.autosparepart.utils.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.*;
-import java.nio.file.*;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service  // ← THIS IS CRITICAL - registers bean in Spring context
+@Service
 public class FileService implements IFileService {
+
+    @Value("${app.images.base-dir:uploads/}")
+    private String baseDir;
+
+    @Autowired
+    private FileUtils fileUtils;
 
     @Override
     public String uploadFile(String uploadDir, MultipartFile file) throws IOException {
+        // Debug logging
+        System.out.println("=== Upload File ===");
+        System.out.println("Upload directory: " + uploadDir);
+
         // Create directory if not exists
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
+            System.out.println("Created directory: " + uploadPath);
         }
 
-        // Generate unique filename
-        String originalFileName = file.getOriginalFilename();
-        String extension = "";
-        if (originalFileName != null && originalFileName.contains(".")) {
-            extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        // Validate file
+        if (file == null || file.isEmpty()) {
+            throw new IOException("File is empty or null");
         }
-        String fileName = UUID.randomUUID().toString() + extension;
+
+        // Get original filename and generate unique name
+        String originalFileName = file.getOriginalFilename();
+        String fileName = fileUtils.generateUniqueFileName(originalFileName);
 
         // Save file
         Path filePath = uploadPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Verify file was saved
+        System.out.println("File saved to: " + filePath);
+        System.out.println("File size: " + Files.size(filePath) + " bytes");
+        System.out.println("File name: " + fileName);
 
         return fileName;
     }
 
     @Override
     public InputStream getResource(String uploadDir, String name) throws FileNotFoundException {
-        Path filePath = Paths.get(uploadDir).resolve(name);
+        Path filePath = Paths.get(uploadDir).toAbsolutePath().resolve(name).normalize();
+
+        System.out.println("Getting resource from: " + filePath);
+
         if (!Files.exists(filePath)) {
-            throw new FileNotFoundException("File not found: " + name);
+            throw new FileNotFoundException("File not found: " + name + " in directory: " + uploadDir);
         }
+
         try {
             return Files.newInputStream(filePath);
         } catch (IOException e) {
-            throw new FileNotFoundException("Unable to read file: " + name);
+            throw new FileNotFoundException("Unable to read file: " + name + " - " + e.getMessage());
         }
     }
 
     @Override
     public List<String> getAllFiles(String uploadDir) throws IOException {
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+
         if (!Files.exists(uploadPath)) {
             return new ArrayList<>();
         }
@@ -80,8 +110,10 @@ public class FileService implements IFileService {
             }
 
             // Create full file path
-            Path uploadPath = Paths.get(uploadDir).normalize();
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Path filePath = uploadPath.resolve(normalizedImage).normalize();
+
+            System.out.println("Deleting file: " + filePath);
 
             // Security: Ensure within upload directory
             if (!filePath.startsWith(uploadPath)) {
@@ -92,7 +124,7 @@ public class FileService implements IFileService {
             boolean deleted = Files.deleteIfExists(filePath);
 
             if (!deleted) {
-                throw new FileNotFoundException("File not found: " + image);
+                throw new FileNotFoundException("File not found: " + image + " in directory: " + uploadDir);
             }
 
             System.out.println("File deleted successfully: " + filePath);
@@ -141,7 +173,7 @@ public class FileService implements IFileService {
 
     @Override
     public void deleteAllFiles(String uploadDir) throws IOException {
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
         if (!Files.exists(uploadPath)) {
             throw new FileNotFoundException("Directory not found: " + uploadDir);
@@ -153,6 +185,7 @@ public class FileService implements IFileService {
                 .forEach(file -> {
                     try {
                         Files.delete(file);
+                        System.out.println("Deleted: " + file);
                     } catch (IOException e) {
                         throw new RuntimeException("Failed to delete file: " + file, e);
                     }
@@ -163,22 +196,82 @@ public class FileService implements IFileService {
     @Override
     public byte[] getFileAsByteArray(String uploadDir, String fileName) {
         try {
-            Path uploadPath = Paths.get(uploadDir).normalize();
+            // Normalize and get absolute paths
+            Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Path filePath = uploadPath.resolve(fileName).normalize();
 
+            // Debug logging
+            System.out.println("=== Get File As Byte Array ===");
+            System.out.println("Upload directory: " + uploadDir);
+            System.out.println("Upload path (absolute): " + uploadPath);
+            System.out.println("File name: " + fileName);
+            System.out.println("Full file path: " + filePath);
+            System.out.println("File exists: " + Files.exists(filePath));
+
+            // Try alternative paths if file not found
+            if (!Files.exists(filePath)) {
+                // Try with original path without absolute conversion
+                Path originalPath = Paths.get(uploadDir).resolve(fileName);
+                System.out.println("Trying original path: " + originalPath);
+
+                if (Files.exists(originalPath)) {
+                    filePath = originalPath;
+                    System.out.println("Found file at original path");
+                } else {
+                    // Try relative to working directory
+                    Path workingDir = Paths.get("").toAbsolutePath();
+                    Path relativePath = workingDir.resolve(uploadDir).resolve(fileName);
+                    System.out.println("Trying relative path: " + relativePath);
+
+                    if (Files.exists(relativePath)) {
+                        filePath = relativePath;
+                        System.out.println("Found file at relative path");
+                    } else {
+                        // Use FileUtils to search in all directories
+                        Path foundPath = fileUtils.searchFileInDirectories(fileName, fileUtils.getAllUploadDirectories());
+
+                        if (foundPath != null) {
+                            filePath = foundPath;
+                            System.out.println("Found file via FileUtils search: " + filePath);
+                        } else {
+                            // Try recursive search as last resort
+                            List<Path> foundPaths = fileUtils.searchFileInAllUploadDirs(fileName);
+                            if (!foundPaths.isEmpty()) {
+                                filePath = foundPaths.get(0);
+                                System.out.println("Found file via recursive search: " + filePath);
+                            } else {
+                                throw new FileNotFoundException(
+                                        String.format("File not found: %s (searched in all upload directories)", fileName)
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+
             // Security check
-            if (!filePath.startsWith(uploadPath)) {
+            Path allowedPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+            if (!filePath.startsWith(allowedPath) &&
+                    !filePath.startsWith(Paths.get(uploadDir).normalize()) &&
+                    !filePath.toString().contains("uploads/")) {
                 throw new SecurityException("Cannot access files outside upload directory");
             }
 
-            if (!Files.exists(filePath)) {
-                throw new FileNotFoundException("File not found: " + fileName);
-            }
+            byte[] bytes = Files.readAllBytes(filePath);
+            System.out.println("File read successfully, size: " + bytes.length + " bytes");
+            System.out.println("File source: " + filePath);
 
-            return Files.readAllBytes(filePath);
+            return bytes;
 
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found error: " + e.getMessage());
             throw new RuntimeException("Failed to read file: " + e.getMessage(), e);
+        } catch (IOException e) {
+            System.err.println("IO Error: " + e.getMessage());
+            throw new RuntimeException("Failed to read file: " + e.getMessage(), e);
+        } catch (SecurityException e) {
+            System.err.println("Security error: " + e.getMessage());
+            throw new RuntimeException("Security violation: " + e.getMessage(), e);
         }
     }
 }

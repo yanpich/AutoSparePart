@@ -27,7 +27,7 @@ public class Vehicle {
     @Column(name = "year_to")
     private Integer yearTo;
 
-    // Relationship to get brand through products
+    // Relationship to get brand-admin-panel through products
     @ManyToMany(mappedBy = "vehicles")
     private List<Product> products;
 

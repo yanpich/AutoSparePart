@@ -17,11 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class BrandDTO {
     private Integer brandId;
 
-    @NotBlank(message = "Please provide brand's name!")
+    @NotBlank(message = "Please provide brand-admin-panel's name!")
     private String brandName;
 
-    @NotBlank(message = "Please provide brand's image!")
-    private String image;// URL or path to the brand's image
+    @NotBlank(message = "Please provide brand-admin-panel's image!")
+    private String image;// URL or path to the brand-admin-panel's image
     @JsonIgnore
     private MultipartFile file; //file for user upload (not store on database)
 }

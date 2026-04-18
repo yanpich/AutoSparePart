@@ -13,6 +13,4 @@ public interface BrandRepository extends JpaRepository<Brand, Integer> {
     Optional<Brand> findByBrandName(String brandName);
 
     void deleteByBrandName(String brandName);
-
-    List<Brand> findByBrandNameContainingIgnoreCase(String brandName);
 }

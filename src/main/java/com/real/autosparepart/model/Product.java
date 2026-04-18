@@ -44,11 +44,7 @@ public class Product {
     private Status status;
 
     @ManyToMany
-    @JoinTable(
-            name = "product_vehicle",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "vehicle_id")
-    )
+    @JoinTable(name = "product_vehicle", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "vehicle_id"))
     private List<Vehicle> vehicles;
 
     @ManyToOne
@@ -65,7 +61,6 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // ✅ Fixed setters (Lombok @Data already generates these, but if you need custom ones:)
     public void setProductName(String productName) {
         this.productName = productName;
     }
@@ -79,11 +74,8 @@ public class Product {
     }
 
 
-
     public enum Status {
-            active,
-            inactive,
-            draft;
+        active, inactive, draft;
     }
 
     @PrePersist

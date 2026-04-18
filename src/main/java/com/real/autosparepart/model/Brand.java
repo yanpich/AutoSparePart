@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
+
 @Table(name = "brands")
 public class Brand {
     @Id
@@ -22,18 +23,18 @@ public class Brand {
     @Column(name = "brand_id")
     private Integer brandId;
 
-    @NotBlank(message = "Please provide brand's name!")
+    @NotBlank(message = "Please provide brand-admin-panel's name!")
     @Column(name = "brand_name", unique = true, nullable = false)
     private String brandName;
 
-    @NotBlank(message = "Please provide brand's image!")
+    @NotBlank(message = "Please provide brand-admin-panel's image!")
     @Column(nullable = false)
-    private String image; // URL or path to the brand's image
+    private String image; // URL or path to the brand-admin-panel's image
 
     @Transient // This field is not stored in database
     private MultipartFile file; // Temporary file upload
 
-    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand-admin-panel", cascade = CascadeType.ALL)
     private List<Product> products;
 
 

@@ -19,22 +19,23 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        # Fixed: Use MySQLDialect instead of MySQL8Dialect
         dialect: org.hibernate.dialect.MySQLDialect
     database: MYSQL
 
   servlet:
     multipart:
       enabled: true
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 10MB      # Increased for multiple images
+      max-request-size: 50MB   # Increased for multiple images
       file-size-threshold: 2KB
+      resolve-lazily: false    # Added for better multipart handling
 
+# File upload configuration
 file:
   upload-dir: uploads/
   allowed:
-    images: jpg,jpeg,png,gif,webp
-  max-size: 5MB
+    images: jpg,jpeg,png,gif,webp,bmp,svg
+  max-size: 10MB
 
 app:
   base-url: http://localhost:8080
@@ -43,15 +44,21 @@ app:
     max-size: 100
   images:
     placeholder: /images/placeholder.jpg
+    # Use absolute paths to avoid confusion
+    base-dir: uploads/
     product-path: uploads/products/
     brand-path: uploads/brands/
     category-path: uploads/categories/
+    # Absolute paths for production (uncomment when needed)
+    # product-path-absolute: ${user.dir}/uploads/products/
+    # brand-admin-panel-path-absolute: ${user.dir}/uploads/brands/
 
 logging:
   level:
-    com.real.autosparepart: DEBUG
-    org.springframework.web: INFO
-    org.hibernate: INFO
+    com.real.autosparepart: INFO    # Change from DEBUG to INFO
+    org.springframework.web: WARN   # Change from DEBUG to WARN
+    org.hibernate: WARN
+    org.springframework.web.multipart: WARN  # Reduce multipart logging
   file:
     name: ./logs/autospare.log
     max-size: 10MB

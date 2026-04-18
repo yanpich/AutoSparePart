@@ -7,6 +7,7 @@ import java.util.List;
 public interface ICategory {
     // RCUD Operation
     CategoryDTO createCategory(CategoryDTO dto);
+
     // READ - by id
     CategoryDTO findById(Integer id);
 

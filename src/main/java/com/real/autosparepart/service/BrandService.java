@@ -3,10 +3,11 @@ package com.real.autosparepart.service;
 import com.real.autosparepart.dto.BrandDTO;
 import com.real.autosparepart.model.Brand;
 import com.real.autosparepart.repository.BrandRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.real.autosparepart.utils.BrandUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,33 +15,26 @@ import java.util.stream.Collectors;
 @Service
 public class BrandService implements IBrand {
 
-    @Autowired
-    private BrandRepository brandRepository;
+    private final BrandRepository brandRepository;
+    private final IFileService fileService;
 
-    @Autowired
-    private IFileService fileService;
+    public BrandService(BrandRepository brandRepository, IFileService fileService) {
+        this.brandRepository = brandRepository;
+        this.fileService = fileService;
+    }
 
-    @Value("${app.images.brand-path:uploads/brands/}")
+    @Value("${app.images.brand-admin-panel-path:uploads/brands/}")
     private String uploadDir;
 
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
-
-    // Helper method to clean brand name
-    private String cleanBrandName(String brandName) {
-        if (brandName == null) return null;
-        return brandName.trim()
-                .replaceAll("^\"+", "")      // Remove leading quotes
-                .replaceAll("\"+$", "")      // Remove trailing quotes
-                .replaceAll("\"", "");       // Remove any remaining quotes
-    }
 
     // READ - Get all brands with full image URLs
     @Override
     public List<BrandDTO> getAllBrands() {
         return brandRepository.findAll()
                 .stream()
-                .map(this::convertToDTOWithUrl)
+                .map(brand -> BrandUtils.convertToDTOWithUrl(brand, baseUrl))
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +43,7 @@ public class BrandService implements IBrand {
     public BrandDTO getBrandById(Integer id) {
         Brand brand = brandRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Brand not found with id: " + id));
-        return convertToDTOWithUrl(brand);
+        return BrandUtils.convertToDTOWithUrl(brand, baseUrl);
     }
 
     // READ - Get brand by name with full image URL
@@ -57,27 +51,7 @@ public class BrandService implements IBrand {
     public BrandDTO getBrandByName(String brandName) {
         Brand brand = brandRepository.findByBrandName(brandName)
                 .orElseThrow(() -> new RuntimeException("Brand not found with name: " + brandName));
-        return convertToDTOWithUrl(brand);
-    }
-
-    // Helper method to convert Entity to DTO with full image URL
-    private BrandDTO convertToDTOWithUrl(Brand brand) {
-        String imageUrl = baseUrl + "/api/files/download/" + brand.getImage();
-
-        return BrandDTO.builder()
-                .brandId(brand.getBrandId())
-                .brandName(brand.getBrandName())
-                .image(imageUrl)  // Full URL to access the image
-                .build();
-    }
-
-    // Helper method for internal use (without full URL)
-    private BrandDTO convertToDTO(Brand brand) {
-        return BrandDTO.builder()
-                .brandId(brand.getBrandId())
-                .brandName(brand.getBrandName())
-                .image(brand.getImage())  // Just the filename/path
-                .build();
+        return BrandUtils.convertToDTOWithUrl(brand, baseUrl);
     }
 
     // CREATE
@@ -86,11 +60,9 @@ public class BrandService implements IBrand {
     public BrandDTO createBrand(BrandDTO brandDTO) {
         try {
             // Validate and clean brand name
-            if (brandDTO == null || brandDTO.getBrandName() == null || brandDTO.getBrandName().trim().isEmpty()) {
-                throw new RuntimeException("Brand name is required");
-            }
+            BrandUtils.validateBrandDTO(brandDTO);
 
-            String brandName = cleanBrandName(brandDTO.getBrandName());
+            String brandName = BrandUtils.cleanBrandName(brandDTO.getBrandName());
 
             // Check duplicate
             if (brandRepository.existsByBrandName(brandName)) {
@@ -116,7 +88,7 @@ public class BrandService implements IBrand {
             Brand savedBrand = brandRepository.save(brand);
 
             // Return DTO with full URL
-            return convertToDTOWithUrl(savedBrand);
+            return BrandUtils.convertToDTOWithUrl(savedBrand, baseUrl);
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to upload brand image: " + e.getMessage());
@@ -133,7 +105,7 @@ public class BrandService implements IBrand {
 
             // Update name if provided
             if (brandDTO.getBrandName() != null && !brandDTO.getBrandName().trim().isEmpty()) {
-                String newName = cleanBrandName(brandDTO.getBrandName());
+                String newName = BrandUtils.cleanBrandName(brandDTO.getBrandName());
 
                 if (!existingBrand.getBrandName().equals(newName) &&
                         brandRepository.existsByBrandName(newName)) {
@@ -144,8 +116,8 @@ public class BrandService implements IBrand {
 
             // Update image if provided
             if (brandDTO.getFile() != null && !brandDTO.getFile().isEmpty()) {
-                // Delete old image
-                if (existingBrand.getImage() != null && !existingBrand.getImage().startsWith("http")) {
+                // Delete old image if it's a local file
+                if (BrandUtils.isLocalFile(existingBrand.getImage())) {
                     try {
                         fileService.deleteFile(uploadDir, existingBrand.getImage());
                     } catch (Exception e) {
@@ -160,7 +132,7 @@ public class BrandService implements IBrand {
             }
 
             Brand updatedBrand = brandRepository.save(existingBrand);
-            return convertToDTOWithUrl(updatedBrand);
+            return BrandUtils.convertToDTOWithUrl(updatedBrand, baseUrl);
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to update brand image: " + e.getMessage());
@@ -176,7 +148,7 @@ public class BrandService implements IBrand {
                     .orElseThrow(() -> new RuntimeException("Brand not found with id: " + id));
 
             // Delete image file if it's a local file
-            if (brand.getImage() != null && !brand.getImage().startsWith("http")) {
+            if (BrandUtils.isLocalFile(brand.getImage())) {
                 try {
                     fileService.deleteFile(uploadDir, brand.getImage());
                 } catch (Exception e) {
@@ -199,7 +171,7 @@ public class BrandService implements IBrand {
                     .orElseThrow(() -> new RuntimeException("Brand not found with name: " + brandName));
 
             // Delete image file if it's a local file
-            if (brand.getImage() != null && !brand.getImage().startsWith("http")) {
+            if (BrandUtils.isLocalFile(brand.getImage())) {
                 try {
                     fileService.deleteFile(uploadDir, brand.getImage());
                 } catch (Exception e) {
@@ -219,7 +191,7 @@ public class BrandService implements IBrand {
         if (brandName == null || brandName.trim().isEmpty()) {
             return false;
         }
-        String cleanedName = cleanBrandName(brandName);
+        String cleanedName = BrandUtils.cleanBrandName(brandName);
         return brandRepository.existsByBrandName(cleanedName);
     }
 }

@@ -12,4 +12,5 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     boolean existsByProductNameIgnoreCase(String name);
 
     boolean existsBySlug(String slug);
+
 }

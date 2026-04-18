@@ -64,7 +64,7 @@ public class VehicleService implements IVehicle {
         if (dto == null || dto.getModel() == null) {
             throw new RuntimeException("Vehicle cannot be null and must have a model");
         }
-        if (dto.getYearFrom() == null || dto.getYearFrom() < 0 ) {
+        if (dto.getYearFrom() == null || dto.getYearFrom() < 0) {
             throw new RuntimeException("Vehicle cannot be null and must have a year from 0");
         }
         if (dto.getYearFrom() > 9999) {
