@@ -38,7 +38,7 @@ file:
   max-size: 10MB
 
 app:
-  base-url: http://localhost:8080
+  base-url: http://localhost:8080/
   pagination:
     default-size: 10
     max-size: 100

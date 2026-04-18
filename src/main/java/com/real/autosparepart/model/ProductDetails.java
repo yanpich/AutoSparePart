@@ -3,6 +3,7 @@ package com.real.autosparepart.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Builder
 @Entity
 @Table(name = "product_details")
 public class ProductDetails {
@@ -21,8 +22,8 @@ public class ProductDetails {
     @Column(name = "id")
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
 
     @Column(name = "old_price", precision = 10, scale = 2)
@@ -46,5 +47,4 @@ public class ProductDetails {
 
     @Column(name = "material")
     private String material;
-
 }

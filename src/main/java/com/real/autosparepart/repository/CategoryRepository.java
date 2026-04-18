@@ -1,6 +1,6 @@
 package com.real.autosparepart.repository;
 
-import com.real.autosparepart.model.Category;  // Fix: Import your actual Category entity
+import com.real.autosparepart.model.Category;  // Fix: Import your actual Category User
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,53 +1,41 @@
 package com.real.autosparepart.dto;
 
-import com.real.autosparepart.model.Brand;
-import com.real.autosparepart.model.Category;
-import com.real.autosparepart.model.Product;
-import com.real.autosparepart.model.Vehicle;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class ProductDTO {
 
     private Integer productId;
 
-    @NotBlank(message = "product name is required")
+    @NotBlank(message = "Product name is required")
     private String productName;
 
     private String slug;
 
-    @NotNull(message = "price is required")
-    @DecimalMin(value = "0.01", message = "Price must be > 0")
+    @NotNull
+    @Positive(message = "Price must be greater than 0")
     private BigDecimal price;
 
     private String description;
 
-    private Product.Status status;
+    private String status;
 
-    // FIXED: Changed from Vehicle object to Integer ID
-    private Integer vehicleId;
-
-    // For multiple vehicles support
-    private List<Integer> vehicleIds;
-
-    // FIXED: Changed from Category object to Integer ID
+    @NotNull(message = "Category is required")
     private Integer categoryId;
 
-    // FIXED: Changed from Brand object to Integer ID
     private Integer brandId;
+
+    private List<Integer> vehicleIds;
+
+    private Integer vehicleId; // backward compatibility
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

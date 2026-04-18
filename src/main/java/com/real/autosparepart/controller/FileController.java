@@ -1,6 +1,6 @@
 package com.real.autosparepart.controller;
 
-import com.real.autosparepart.service.IFileService;
+import com.real.autosparepart.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class FileController {
 
     @Autowired
-    private IFileService fileService;
+    private FileService fileService;
 
     @Value("${app.images.brand-admin-panel-path:uploads/brands/}")
     private String brandUploadPath;
