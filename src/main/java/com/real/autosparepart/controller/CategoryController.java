@@ -1,9 +1,7 @@
 package com.real.autosparepart.controller;
 
 import com.real.autosparepart.dto.CategoryDTO;
-import com.real.autosparepart.service.CategoryService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
