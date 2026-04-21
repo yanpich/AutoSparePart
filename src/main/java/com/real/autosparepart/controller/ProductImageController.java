@@ -1,9 +1,8 @@
 package com.real.autosparepart.controller;
 
 import com.real.autosparepart.dto.ProductImageDTO;
-import com.real.autosparepart.service.IProductImage;
+import com.real.autosparepart.service.ProductImageService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,8 +18,11 @@ import java.util.Map;
 @RequestMapping("/api/products/{productId}/images")
 public class ProductImageController {
 
-    @Autowired
-    private IProductImage productImageService;
+    private final ProductImageService productImageService;
+
+    public ProductImageController(ProductImageService productImageService) {
+        this.productImageService = productImageService;
+    }
 
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
