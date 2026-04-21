@@ -34,9 +34,8 @@ public class Brand {
     @Transient // This field is not stored in database
     private MultipartFile file; // Temporary file upload
 
-    @OneToMany(mappedBy = "brand-admin-panel", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "brand")
     private List<Product> products;
-
 
 }
 
