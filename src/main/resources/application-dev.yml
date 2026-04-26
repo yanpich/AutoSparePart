@@ -1,0 +1,183 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/autosparepartdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+    database: MYSQL
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+      file-size-threshold: 2KB
+      resolve-lazily: false
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yanpich154@gmail.com  # FIXED: Use actual Gmail address
+    password: "${EMAIL_PASSWORD:mcawecdxtbaoojmj}"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+            timeout: 5000
+            connection-timeout: 5000
+            write-timeout: 5000
+      test-connection: false
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    mode: HTML
+
+  web:
+    resources:
+      static-locations: classpath:/static/,file:uploads/
+      add-mappings: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+# File upload configuration
+file:
+  upload-dir: uploads/
+  allowed:
+    images: jpg,jpeg,png,gif,webp,bmp,svg
+  max-size: 10MB
+
+app:
+  base-url: http://localhost:8080/
+  pagination:
+    default-size: 10
+    max-size: 100
+  images:
+    placeholder: /images/placeholder.jpg
+    base-dir: uploads/
+    product-path: uploads/products/
+    brand-path: uploads/brands/
+    category-path: uploads/categories/
+
+logging:
+  level:
+    com.real.autosparepart: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
+    org.springframework.web.multipart: WARN
+    org.springframework.mail: DEBUG
+    com.zaxxer.hikari: WARN
+  file:
+    name: ./logs/autospare.log
+    max-size: 10MB
+    max-history: 30
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+jwt:
+  secret: ${JWT_SECRET:14IYek1yNvZpBUbkJY17Z1NkGNHRPKjqL594BLKgb7Y=}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    session:
+      timeout: 30m
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+  tomcat:
+    max-connections: 10000
+    accept-count: 100
+    threads:
+      max: 200
+      min-spare: 10
+    connection-timeout: 20000
+    max-swallow-size: 50MB
+
+# Security Configuration
+security:
+  bcrypt:
+    strength: 10
+  otp:
+    expiration-minutes: 5
+    length: 6
+  session:
+    insecure: true
+
+# CORS Configuration
+cors:
+  allowed-origins:
+    - http://localhost:3000
+    - http://localhost:4200
+    - http://localhost:8080
+  allowed-methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - OPTIONS
+    - PATCH
+  allowed-headers:
+    - "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Development specific settings
+devtools:
+  restart:
+    enabled: true
+    additional-paths: src/main/java
+    exclude: static/**,public/**
+  livereload:
+    enabled: true
+
+# API Documentation (if using SpringDoc)
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true

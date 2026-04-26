@@ -42,4 +42,8 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
     }
+    @ExceptionHandler(AuthException.class)
+    public ProblemDetail handleAuthException(AuthException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
 }
