@@ -13,6 +13,8 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "Username is required")
+    @Size(min = 3, max = 20, message = "Username must be 3-20 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Username can only contain letters, numbers, dots, underscores and hyphens")
     private String username;
 
     @NotBlank(message = "Password is required")
