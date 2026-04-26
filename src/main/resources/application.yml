@@ -66,3 +66,7 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+jwt:
+  secret: ${JWT_SECRET:your-256-bit-secret-key-for-jwt-signing-and-verification}
+  access-token-expiration: 900000  # 15 minutes in milliseconds
+  refresh-token-expiration: 604800000  # 7 days in milliseconds

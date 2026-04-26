@@ -36,7 +36,7 @@ public class ProductImageController {
             // Add full URLs to each image
             for (ProductImageDTO image : images) {
                 if (image.getImageUrl() != null) {
-                    image.setFileUrl(baseUrl + "/api/files/download/" + image.getImageUrl());
+                    image.setFileUrl(baseUrl + "api/files/download/" + image.getImageUrl());
                 }
             }
 
@@ -63,7 +63,7 @@ public class ProductImageController {
 
             // Add full URL
             if (image.getImageUrl() != null) {
-                image.setFileUrl(baseUrl + "/api/files/download/" + image.getImageUrl());
+                image.setFileUrl(baseUrl + "api/files/download/" + image.getImageUrl());
             }
 
             return ResponseEntity.ok(image);
@@ -93,7 +93,7 @@ public class ProductImageController {
 
             // Add full URL
             if (primaryImage.getImageUrl() != null) {
-                primaryImage.setFileUrl(baseUrl + "/api/files/download/" + primaryImage.getImageUrl());
+                primaryImage.setFileUrl(baseUrl + "api/files/download/" + primaryImage.getImageUrl());
             }
 
             return ResponseEntity.ok(primaryImage);
@@ -120,7 +120,7 @@ public class ProductImageController {
             }
 
             // Redirect to file download endpoint
-            String fileUrl = baseUrl + "/api/files/download/" + fileName;
+            String fileUrl = baseUrl + "api/files/download/" + fileName;
             Map<String, String> response = new HashMap<>();
             response.put("url", fileUrl);
             response.put("fileName", fileName);
@@ -183,7 +183,7 @@ public class ProductImageController {
             // Add full URLs
             for (ProductImageDTO image : uploaded) {
                 if (image.getImageUrl() != null) {
-                    image.setFileUrl(baseUrl + "/api/files/download/" + image.getImageUrl());
+                    image.setFileUrl(baseUrl + "api/files/download/" + image.getImageUrl());
                 }
             }
 
@@ -219,7 +219,7 @@ public class ProductImageController {
             // Add full URLs
             for (ProductImageDTO image : uploaded) {
                 if (image.getImageUrl() != null) {
-                    image.setFileUrl(baseUrl + "/api/files/download/" + image.getImageUrl());
+                    image.setFileUrl(baseUrl + "api/files/download/" + image.getImageUrl());
                 }
             }
 
@@ -252,7 +252,7 @@ public class ProductImageController {
 
             // Add full URL
             if (updated.getImageUrl() != null) {
-                updated.setFileUrl(baseUrl + "/api/files/download/" + updated.getImageUrl());
+                updated.setFileUrl(baseUrl + "api/files/download/" + updated.getImageUrl());
             }
 
             return ResponseEntity.ok(updated);
@@ -274,7 +274,7 @@ public class ProductImageController {
 
             // Add full URL
             if (updated.getImageUrl() != null) {
-                updated.setFileUrl(baseUrl + "/api/files/download/" + updated.getImageUrl());
+                updated.setFileUrl(baseUrl + "api/files/download/" + updated.getImageUrl());
             }
 
             return ResponseEntity.ok(updated);
