@@ -17,8 +17,8 @@
 | 3 | Brand Management | Manage brands (Toyota, Honda, BMW, Mercedes, etc.)          | ✅ Completed |
 | 4 | Vehicle Management | Link spare parts to specific vehicle models                 | ✅ Completed |
 | 5 | File Upload/Download | Upload and manage product images                            | ✅ Completed |
-| 6 | User Authentication | Login/Register/Forgot Password with JWT                     | 🔄 In Progress |
-| 7 | Role-based Authorization | ADMIN and USER roles                                        | 🔄 In Progress |
+| 6 | User Authentication | Login/Register/Forgot Password with JWT                     |  ✅ Completed  |
+| 7 | Role-based Authorization | ADMIN and USER roles                                        |  ✅ Completed  |
 
 ---
 
@@ -32,7 +32,7 @@
 | POST   | `/auth/register`       | User registration     | None  |
 | POST   | `/auth/login`          | Login → returns JWT   | None  |
 | POST   | `/auth/forgotpassword` | User forgot password  | None  |
-| GET    | `/auth/me`             | Get current user info | ADMIN |
+
 
 
 ### Products
@@ -44,10 +44,33 @@
 | PUT | `/products/{id}` | Update product | ADMIN |
 | DELETE | `/products/{id}` | Delete product | ADMIN |
 
-### Categories, Brands & Vehicles
-Same pattern applies:
-- `GET` endpoints: Public access
-- `POST`, `PUT`, `DELETE` endpoints: ADMIN only
+### Brands
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/brands` | Get all brands | None |
+| GET | `/brands/{id}` | Get brands by ID | None |
+| POST | `/brands` | Create brands | ADMIN |
+| PUT | `/brands/{id}` | Update brands | ADMIN |
+| DELETE | `/brands/{id}` | Delete brands | ADMIN |
+
+### Categories
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/categories` | Get all categories | None |
+| GET | `/categories/{id}` | Get category by ID | None |
+| POST | `/categories` | Create category | ADMIN |
+| PUT | `/categories/{id}` | Update category | ADMIN |
+| DELETE | `/categories/{id}` | Delete category | ADMIN |
+
+### Vechicles
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/vechicles` | Get all vechicles | None |
+| GET | `/vechicles/{id}` | Get vechicle by ID | None |
+| POST | `/vechicles` | Create vechicle | ADMIN |
+| PUT | `/vechicles/{id}` | Update vechicle | ADMIN |
+| DELETE | `/vechicles/{id}` | Delete vechicle | ADMIN |
+
 
 ### File Operations
 | Method | Endpoint | Description | Auth |
