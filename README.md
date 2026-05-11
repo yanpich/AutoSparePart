@@ -38,46 +38,46 @@
 ### Products
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/products` | Get all products | None |
-| GET | `/products/{id}` | Get product by ID | None |
-| POST | `/products` | Create product | ADMIN |
-| PUT | `/products/{id}` | Update product | ADMIN |
-| DELETE | `/products/{id}` | Delete product | ADMIN |
+| GET | `/admin/products` | Get all products | None |
+| GET | `/admin/products/{id}` | Get product by ID | None |
+| POST | `/admin/products` | Create product | ADMIN |
+| PUT | `/admin/products/{id}` | Update product | ADMIN |
+| DELETE | `/admin/products/{id}` | Delete product | ADMIN |
 
 ### Brands
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/brands` | Get all brands | None |
-| GET | `/brands/{id}` | Get brands by ID | None |
-| POST | `/brands` | Create brands | ADMIN |
-| PUT | `/brands/{id}` | Update brands | ADMIN |
-| DELETE | `/brands/{id}` | Delete brands | ADMIN |
+| GET | `/admin/brands` | Get all brands | None |
+| GET | `/admin/brands/{id}` | Get brands by ID | None |
+| POST | `/admin/brands` | Create brands | ADMIN |
+| PUT | `/admin/brands/{id}` | Update brands | ADMIN |
+| DELETE | `/admin/brands/{id}` | Delete brands | ADMIN |
 
 ### Categories
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/categories` | Get all categories | None |
-| GET | `/categories/{id}` | Get category by ID | None |
-| POST | `/categories` | Create category | ADMIN |
-| PUT | `/categories/{id}` | Update category | ADMIN |
-| DELETE | `/categories/{id}` | Delete category | ADMIN |
+| GET | `/admin/categories` | Get all categories | None |
+| GET | `/admin/categories/{id}` | Get category by ID | None |
+| POST | `/admin/categories` | Create category | ADMIN |
+| PUT | `/admin/categories/{id}` | Update category | ADMIN |
+| DELETE | `/admin/categories/{id}` | Delete category | ADMIN |
 
 ### Vechicles
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/vechicles` | Get all vechicles | None |
-| GET | `/vechicles/{id}` | Get vechicle by ID | None |
-| POST | `/vechicles` | Create vechicle | ADMIN |
-| PUT | `/vechicles/{id}` | Update vechicle | ADMIN |
-| DELETE | `/vechicles/{id}` | Delete vechicle | ADMIN |
+| GET | `/admin/vechicles` | Get all vechicles | None |
+| GET | `/admin/vechicles/{id}` | Get vechicle by ID | None |
+| POST | `/admin/vechicles` | Create vechicle | ADMIN |
+| PUT | `/admin/vechicles/{id}` | Update vechicle | ADMIN |
+| DELETE | `/admin/vechicles/{id}` | Delete vechicle | ADMIN |
 
 
 ### File Operations
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
-| GET | `/files/view/{fileName}` | View image | None |
-| POST | `/files/upload` | Upload file | ADMIN |
-| DELETE | `/files/delete/{fileName}` | Delete file | ADMIN |
+| GET | `/admin/files/view/{fileName}` | View image | None |
+| POST | `/admin/files/upload` | Upload file | ADMIN |
+| DELETE | `/admin/files/delete/{fileName}` | Delete file | ADMIN |
 
 ---
 
