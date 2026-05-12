@@ -31,7 +31,9 @@
 |--------|------------------------|-----------------------|-------|
 | POST   | `/auth/register`       | User registration     | None  |
 | POST   | `/auth/login`          | Login → returns JWT   | None  |
+| POST   | `/auth/refresh`        | Generate new JWT access token    | None  |
 | POST   | `/auth/forgotpassword` | User forgot password  | None  |
+
 
 
 
