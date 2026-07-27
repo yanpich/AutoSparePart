@@ -7,18 +7,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product-details")
+@RequestMapping("/api/admin/product-details")
 @RequiredArgsConstructor
 @Slf4j
 public class ProductDetailsController {
 
     private final ProductDetailService productDetailService;
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductDetailsDTO> create(@Valid @RequestBody ProductDetailsDTO dto) {
         log.info("POST /api/product-details - Create product details");
@@ -26,6 +27,7 @@ public class ProductDetailsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductDetailsDTO> findById(@PathVariable Integer id) {
         log.info("GET /api/product-details/{} - Find by id", id);
@@ -33,6 +35,7 @@ public class ProductDetailsController {
         return ResponseEntity.ok(details);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public ResponseEntity<List<ProductDetailsDTO>> findAll() {
         log.info("GET /api/product-details - Find all");
@@ -40,6 +43,7 @@ public class ProductDetailsController {
         return ResponseEntity.ok(details);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductDetailsDTO> update(
             @PathVariable Integer id,
@@ -49,6 +53,7 @@ public class ProductDetailsController {
         return ResponseEntity.ok(updated);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         log.info("DELETE /api/product-details/{} - Delete product details", id);

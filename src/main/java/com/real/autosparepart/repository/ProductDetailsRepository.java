@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductDetailsRepository extends JpaRepository<ProductDetails, Integer> {
+public interface ProductDetailsRepository extends JpaRepository<ProductDetails, Integer> {  // Use Integer
 
     boolean existsByProduct_ProductId(Integer productId);
 

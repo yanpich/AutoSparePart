@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 public class User implements UserDetails {
 
@@ -43,7 +46,7 @@ public class User implements UserDetails {
     @Size(min = 5, message = "The password must have at least 5 characters")
     private String password;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private RefreshToken refreshToken;
 
     @OneToOne(mappedBy = "user")
@@ -52,10 +55,68 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    @Column(nullable = true)
+    private String phone;
+
+    @Column(nullable = true)
+    private String address;
+
+    @Column(nullable = true, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = true)
+    private LocalDateTime updatedAt;
+
+    // ✅ IMPORTANT: Use Boolean wrapper instead of primitive boolean
+    @Column(nullable = false)
+    private Boolean deleted = false;
+
+    @Column(nullable = true)
+    private LocalDateTime deletedAt;
+
+    @Column(nullable = true)
+    private Integer deletedBy;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        if (deleted == null) {
+            deleted = false;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public void setRefreshToken(RefreshToken refreshToken) {
+        this.refreshToken = refreshToken;
+        if (refreshToken != null && refreshToken.getUser() != this) {
+            refreshToken.setUser(this);
+        }
+    }
+
+    public void softDelete(Integer deletedBy) {
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = deletedBy;
+    }
+
+    public void restore() {
+        this.deleted = false;
+        this.deletedAt = null;
+        this.deletedBy = null;
+    }
+
+    public boolean isDeleted() {
+        return deleted != null && deleted;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
@@ -70,12 +131,12 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !isDeleted();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !isDeleted();
     }
 
     @Override
@@ -85,6 +146,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !isDeleted();
     }
 }

@@ -1,21 +1,28 @@
 package com.real.autosparepart.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class CategoryDTO {
-
     private Integer categoryId;
-    @NotBlank(message = "Category name is required")
-    private String name;
-
-    @NotBlank(message = "Category slug is required")
+    private String categoryName;
     private String slug;
+    private String description;
+    private Boolean status;
+    private Integer productCount;
+    private String createdAt;
+    private String updatedAt;
+
+    public Serializable getActive() {
+        return null;
+    }
+
 }

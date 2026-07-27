@@ -17,7 +17,6 @@ public interface ProductService {
 
     Page<ProductDTO> findAll(Pageable pageable);
 
-//    Optional<Object> findBySlug(String slug);
 
 //    Page<ProductDTO> findByStatus(Product.Status status, Pageable pageable);
 

@@ -1,6 +1,5 @@
 package com.real.autosparepart.controller;
 
-
 import com.real.autosparepart.auth.Service.AuthService;
 import com.real.autosparepart.auth.Service.JwtService;
 import com.real.autosparepart.auth.Service.RefreshTokenService;
@@ -13,6 +12,7 @@ import com.real.autosparepart.auth.entity.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
@@ -47,8 +47,17 @@ public class AuthController {
         return ResponseEntity.ok(AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
-                .name(user.getName())      // Add this
-                .email(user.getEmail())    // Add this
+                .name(user.getName())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .userId(user.getUserId())
                 .build());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        authService.logout(email);
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 }

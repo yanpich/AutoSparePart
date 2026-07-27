@@ -17,7 +17,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/products/{productId}/images")
 public class ProductImageController {
-
     private final ProductImageService productImageService;
 
     public ProductImageController(ProductImageService productImageService) {
