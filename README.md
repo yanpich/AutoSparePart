@@ -17,48 +17,10 @@
 | 3 | Brand Management | Manage brands (Toyota, Honda, BMW, Mercedes, etc.)          | ✅ Completed |
 | 4 | Vehicle Management | Link spare parts to specific vehicle models                 | ✅ Completed |
 | 5 | File Upload/Download | Upload and manage product images                            | ✅ Completed |
-| 6 | User Authentication | Login/Register/Forgot Password with JWT                     | 🔄 In Progress |
-| 7 | Role-based Authorization | ADMIN and USER roles                                        | 🔄 In Progress |
+| 6 | User Authentication | Login/Register/Forgot Password with JWT                     | ✅ Completed |
+| 7 | Role-based Authorization | ADMIN and USER roles                                        | ✅ Completed |
 
 ---
-
-## API Endpoints
-
-**Base URL:** `http://localhost:8080/api`
-
-### Authentication
-| Method | Endpoint               | Description           | Auth  |
-|--------|------------------------|-----------------------|-------|
-| POST   | `/auth/register`       | User registration     | None  |
-| POST   | `/auth/login`          | Login → returns JWT   | None  |
-| POST   | `/auth/forgotpassword` | User forgot password  | None  |
-| GET    | `/auth/me`             | Get current user info | ADMIN |
-
-
-### Products
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/products` | Get all products | None |
-| GET | `/products/{id}` | Get product by ID | None |
-| POST | `/products` | Create product | ADMIN |
-| PUT | `/products/{id}` | Update product | ADMIN |
-| DELETE | `/products/{id}` | Delete product | ADMIN |
-
-### Categories, Brands & Vehicles
-Same pattern applies:
-- `GET` endpoints: Public access
-- `POST`, `PUT`, `DELETE` endpoints: ADMIN only
-
-### File Operations
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| GET | `/files/view/{fileName}` | View image | None |
-| POST | `/files/upload` | Upload file | ADMIN |
-| DELETE | `/files/delete/{fileName}` | Delete file | ADMIN |
-
----
-
-## Database Schema
 
 **Core Tables:**
 - `users` - Authentication and role management
