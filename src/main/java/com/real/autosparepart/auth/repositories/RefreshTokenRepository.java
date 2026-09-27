@@ -1,7 +1,7 @@
 package com.real.autosparepart.auth.repositories;
 
-import com.real.autosparepart.auth.entity.RefreshToken;
-import com.real.autosparepart.auth.entity.User;
+import com.real.autosparepart.user.entity.RefreshToken;
+import com.real.autosparepart.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

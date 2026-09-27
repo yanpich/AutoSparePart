@@ -1,8 +1,8 @@
 package com.real.autosparepart.auth.repositories;
 
 
-import com.real.autosparepart.auth.entity.ForgotPassword;
-import com.real.autosparepart.auth.entity.User;
+import com.real.autosparepart.user.entity.ForgotPassword;
+import com.real.autosparepart.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
